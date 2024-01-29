@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ruangan Scheduling</title>
+  <style>
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: center;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+
+    form {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>JADWAL PENGGUNAAN RUANGAN DI GEDUNG PROGRAM PASCASARJANA ULM</h2>
+
+  <div id="scheduleForm">
+    <form>
+      <!-- Your scheduling form inputs here -->
+
+      <button type="button" onclick="addSchedule()">Tambahkan Jadwal</button>
+    </form>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Waktu</th>
+        <th>Senin</th>
+        <th>Selasa</th>
+        <th>Rabu</th>
+        <th>Kamis</th>
+        <th>Juma'at</th>
+        <th>Sabtu</th>
+        <th>KET</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Table rows will be dynamically added here -->
+    </tbody>
+  </table>
+
+  <script>
+    var scheduleData = [];
+
+    function populateSchedulingTable() {
+      var table = document.querySelector('table');
+      var tbody = table.querySelector('tbody');
+
+      tbody.innerHTML = '';
+
+      for (var i = 0; i < scheduleData.length; i++) {
+        var row = tbody.insertRow();
+        var rowData = scheduleData[i];
+
+        var timeCell = row.insertCell();
+        timeCell.textContent = rowData.Waktu;
+
+        var days = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+        for (var j = 0; j < days.length; j++) {
+          var day = days[j];
+          var cell = row.insertCell();
+          cell.textContent = rowData[day] || '';
+        }
+
+        // Add buttons for editing and deleting each row
+        var actionCell = row.insertCell();
+        var editButton = document.createElement('button');
+        var deleteButton = document.createElement('button');
+
+        editButton.textContent = 'Edit';
+        deleteButton.textContent = 'Delete';
+
+        (function(index) {
+          editButton.onclick = function() {
+            editSchedule(index);
+          };
+
+          deleteButton.onclick = function() {
+            deleteSchedule(index);
+          };
+        })(i);
+
+        actionCell.appendChild(editButton);
+        actionCell.appendChild(deleteButton);
+      }
+    }
+
+    function addSchedule() {
+      var Waktu = prompt('Enter waktu:');
+      var Senin = prompt('Enter Senin activity:');
+      var Selasa = prompt('Enter Selasa activity:');
+      var Rabu = prompt('Enter Rabu activity:');
+      var Kamis = prompt('Enter Kamis activity:');
+      var Jumat = prompt('Enter Jumat activity:');
+      var Sabtu = prompt('Enter Sabtu activity:');
+      
+      var newSchedule = { Waktu, Senin, Selasa, Rabu, Kamis, Jumat, Sabtu };
+      scheduleData.push(newSchedule);
+
+      populateSchedulingTable();
+    }
+
+    function editSchedule(index) {
+      var editedSchedule = scheduleData[index];
+
+      var Waktu = prompt('Enter new Waktu:', editedSchedule.Waktu);
+      var Senin = prompt('Enter new Senin activity:', editedSchedule.Senin);
+      var Selasa = prompt('Enter new Selasa activity:', editedSchedule.Selasa);
+      var Rabu = prompt('Enter new Rabu activity:', editedSchedule.Rabu);
+      var Kamis = prompt('Enter new Kamis activity:', editedSchedule.Kamis);
+      var Jumat = prompt('Enter new Jumat activity:', editedSchedule.Jumat);
+      var Sabtu = prompt('Enter new Sabtu activity:', editedSchedule.Sabtu);
+
+      var updatedSchedule = { Waktu, Senin, Selasa, Rabu, Kamis, Jumat, Sabtu };
+      scheduleData[index] = updatedSchedule;
+
+      populateSchedulingTable();
+    }
+
+    function deleteSchedule(index) {
+      var confirmDelete = confirm('Are you sure you want to delete this schedule?');
+
+      if (confirmDelete) {
+        scheduleData.splice(index, 1);
+        populateSchedulingTable();
+      }
+    }
+
+    window.onload = populateSchedulingTable;
+  </script>
+
+</body>
+</html>
